@@ -10,7 +10,7 @@ This repository demonstrates how one could write rules in Rego and decide to acc
 
 ## Rego structure
 
-`main.rego` distributes rule decisions based on the resources shown in a terraform plan.
+`main.rego` distributes rule decisions based on the resources shown in a terraform plan using partial evaluation.
 
 ```rego
 deny[msg] {
@@ -22,7 +22,7 @@ deny[msg] {
 }
 ```
 
-The first rule passes specific resources along to a specific matching policy (if it exists). For example, if a terraform plan contains an `aws_s3_bucket` resource, the first rule will delegate its deny decision to data.terraform.aws_s3_bucket, which is contained in `aws_s3_bucket.rego`. The idea is that any specific policies for specific resources can be organized in this fashion. If there is no existing policy for a given resource, OPA makes no deny is given.
+The first rule passes specific resources along to a specific matching policy (if it exists). For example, if a terraform plan contains an `aws_s3_bucket` resource, the first rule will delegate its deny decision to data.terraform.aws_s3_bucket, which is contained in `aws_s3_bucket.rego`. The idea is that any specific policies for specific resources can be organized in this fashion. If there is no existing policy for a given resource, OPA makes no decision and no deny message is given.
 
 The second rule passes the entire terraform plan to the policy contained in `aws_common.rego`, which can be used to evaluate resource-agnostic policies, such as a tagging strategy or security baseline.
 
@@ -61,4 +61,5 @@ The provided main.tf will generate the following deny message:
 
 * [Policy-based infrastructure guardrails with Terraform and OPA](https://blog.styra.com/blog/policy-based-infrastructure-guardrails-with-terraform-and-opa)
 * [OPA Other Use Cases - Terraform](https://www.openpolicyagent.org/docs/latest/terraform)
+* [Partial Evaluation](https://blog.openpolicyagent.org/partial-evaluation-162750eaf422)
 
