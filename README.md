@@ -1,6 +1,6 @@
 # terraform-aws-opa
 
-This repository demonstrates how one could write rules in Rego and decide to accept or deny a terraform plan using Open Policy Agent (OPA). OPA has the ability to evaluate rules on arbitrary JSON or YAML input, which Terraform supports - [https://www.terraform.io/docs/internals/json-format.html#plan-representation](https://www.terraform.io/docs/internals/json-format.html#plan-representation).
+This repository demonstrates how one could write rules in Rego and decide to accept or deny a terraform plan using Open Policy Agent (OPA). OPA has the ability to evaluate rules on arbitrary JSON or YAML input, which [Terraform supports](https://www.terraform.io/docs/internals/json-format.html#plan-representation).
 
 ## Requirements
 
@@ -38,7 +38,27 @@ opa eval --format pretty --data policy/ --input input.json "data.main.deny" --fa
 
 The `--fail-defined` flag causes OPA to return an exit code of 1 if `data.main.deny` is non-empty and an exit code of 0 otherwise. Therefore, this series of commands can be used in a CI/CD pipeline to enforce certain organizational policies after writing then out in Rego.
 
+The provided main.tf will generate the following deny message:
+
+```json
+[
+  "restrict_public_buckets must be true",
+  "Cannot use aws_secretsmanager_secret_version - aws_secretsmanager_secret_version.first",
+  "Cannot use aws_secretsmanager_secret_version - data.aws_secretsmanager_secret_version.second",
+  "aws_secretsmanager_secret_version.first invalid, cannot use resource type aws_secretsmanager_secret_version",
+  "data.aws_secretsmanager_secret_version.second invalid, cannot use resource type aws_secretsmanager_secret_version",
+  "aws_s3_account_public_access_block.standard is missing required tags: apm_id, dept, environment",
+  "aws_secretsmanager_secret.example is missing required tags: apm_id, dept, environment",
+  "aws_secretsmanager_secret_version.first is missing required tags: apm_id, dept, environment",
+  "aws_s3_account_public_access_block.standard is not a module",
+  "aws_s3_bucket.test is not a module",
+  "aws_secretsmanager_secret.example is not a module",
+  "aws_secretsmanager_secret_version.first is not a module"
+]
+```
+
 ## References
 
-* [https://blog.styra.com/blog/policy-based-infrastructure-guardrails-with-terraform-and-opa](Policy-based infrastructure guardrails with Terraform and OPA)
-* [https://www.openpolicyagent.org/docs/latest/terraform](OPA Other Use Cases - Terraform)
+* [Policy-based infrastructure guardrails with Terraform and OPA](https://blog.styra.com/blog/policy-based-infrastructure-guardrails-with-terraform-and-opa)
+* [OPA Other Use Cases - Terraform](https://www.openpolicyagent.org/docs/latest/terraform)
+
