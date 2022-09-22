@@ -36,7 +36,7 @@ terraform plan --out tfplan.bin && terraform show -json tfplan.bin > input.json
 opa eval --format pretty --data policy/ --input input.json "data.main.deny" --fail-defined
 ```
 
-The `--fail-defined` flag causes OPA to return an exit code of 1 if `data.main.deny` is non-empty and an exit code of 0 otherwise. Therefore, this series of commands can be used in a CI/CD pipeline to enforce certain organizational policies after writing then out in Rego.
+The `--fail-defined` flag causes OPA to return an exit code of 1 if `data.main.deny` is non-empty and an exit code of 0 otherwise. Therefore, this series of commands can be used in a CI/CD pipeline to enforce certain organizational policies after writing them out in Rego.
 
 The provided main.tf will generate the following deny message:
 
